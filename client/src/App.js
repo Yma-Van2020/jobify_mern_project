@@ -4,7 +4,7 @@ import {
   Error,
   Register,
   Landing
-} from './pages/Index'
+} from './pages'
 
 function App() {
   return (

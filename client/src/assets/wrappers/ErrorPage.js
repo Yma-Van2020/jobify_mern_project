@@ -13,6 +13,12 @@ const Wrapper = styled.main`
   h3 {
     margin-bottom: 0.5rem;
   }
+  .flexbox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 11%;
+  }
   p {
     margin-top: 0;
     margin-bottom: 0.5rem;
