@@ -1,20 +1,27 @@
 import express from 'express';
 import NotFoundMiddleware from './middleware/not-found.js';
-import errorHandlerMiddlrware from './middleware/error-handler.js';
+import errorHandlerMiddleware from './middleware/error-handler.js';
 import dotenv from 'dotenv';
 import connectDB from './db/connect.js';
+
+import authRouter from './routes/authRoutes.js'
+import jobsRouter from './routes/jobsRoutes.js'
 
 dotenv.config();
 const app = express();
 
-//middleware
+//get the json data
+app.use(express.json())
 
 app.get('/', (req, res) => {
   res.send("welcome")
 })
 
+app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/jobs', jobsRouter)
+
 app.use(NotFoundMiddleware)
-app.use(errorHandlerMiddlrware)
+app.use(errorHandlerMiddleware)
 
 const port = process.env.PORT || 5000
 
