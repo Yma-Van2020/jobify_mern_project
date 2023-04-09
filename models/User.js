@@ -4,23 +4,23 @@ import validator from 'validator'
 const UserSchema = new mongoose.Schema({
   name : {
     type: String,
-    required: [true,  ' Pleased provide name'],
+    required: [true,' Pleased provide name'],
     minlength: 3,
     maxlength: 20,
     trim: true
   },
   email: {
     type: String,
-    required: [true,  ' Pleased provide email'],
+    required: [true,' Pleased provide email'],
     validate: {
       validator: validator.isEmail,
-      message: 'Please pro'
+      message: 'Pleased provide email'
     },
     unique: true
   },
   password: {
     type: String,
-    required: [true,  ' Pleased provide password'],
+    required: [true,' Pleased provide password'],
     minlength: 6
   },
   lastName: {
