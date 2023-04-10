@@ -13,13 +13,11 @@ const initialState = {
 const Register = () => {
   const [values, setValues] = useState(initialState);
   //access the values stored in the state through the use of useAppContext hook
-  const { isLoading, showAlert, displayAlert } = useAppContext();
+  const { isLoading, showAlert, displayAlert, registerUser} = useAppContext();
 
   // global context and useNavigate later
   const handleChange = (e) => {
-    console.log(e.target.name)
     setValues({...values, [e.target.name]:e.target.value})
-    console.log(values)
   }
 
   const toggleMember = () => {
@@ -33,6 +31,13 @@ const Register = () => {
       displayAlert()
       return;
     }  
+    const currentUser = {name, email, password}
+    if(isMember){
+      console.log('already a member')
+    }
+    else {
+      registerUser(currentUser)
+    }
   };
 
   return (
@@ -46,7 +51,7 @@ const Register = () => {
 
         <FormRow type="text" name="email" value={values.email} handleChange={handleChange}/>
         <FormRow type="text" name="password" value={values.password} handleChange={handleChange}/>
-        <button type='submit' className='btn btn-block'>
+        <button type='submit' className='btn btn-block' disabled={isLoading}>
             submit
         </button>
         <p>

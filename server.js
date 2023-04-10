@@ -6,6 +6,9 @@ import connectDB from './db/connect.js';
 import 'express-async-errors'
 import authRouter from './routes/authRoutes.js'
 import jobsRouter from './routes/jobsRoutes.js'
+// import cors from 'cors'
+
+// app.use(cors())
 
 dotenv.config();
 const app = express();
