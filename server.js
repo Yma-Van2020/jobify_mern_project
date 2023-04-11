@@ -6,12 +6,17 @@ import connectDB from './db/connect.js';
 import 'express-async-errors'
 import authRouter from './routes/authRoutes.js'
 import jobsRouter from './routes/jobsRoutes.js'
+import morgan from 'morgan'
 // import cors from 'cors'
 
 // app.use(cors())
 
 dotenv.config();
 const app = express();
+
+if(process.env.NODE_ENV !== 'production'){
+  app.use(morgan('dev'))
+}
 
 //get the json data
 app.use(express.json())
