@@ -13,9 +13,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={
-          <ProtectedRoute>
-            <SharedLayout/>
-          </ProtectedRoute>
+            <ProtectedRoute>
+              <SharedLayout/>
+            </ProtectedRoute>
           }>
             <Route index element={<Stats/>}/>
             <Route path="all-jobs" element={<AllJobs/>}/>
