@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from 'react';
 import reducer from './reducer'
-import { DISPLAY_ALERT, CLEAR_ALERT, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR } from './actions';
+import { DISPLAY_ALERT, CLEAR_ALERT, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER } from './actions';
 import axios from 'axios'
 
 const token = localStorage.getItem('token')
@@ -15,7 +15,8 @@ export const initialState = {
   user: user ? JSON.parse(user):null,
   token: token || null,
   userLocation: userLocation || '',
-  jobLocation: userLocation || ''
+  jobLocation: userLocation || '',
+  showSidebar: false
 };
 
 //store and pass down the application's state to all child components
@@ -90,8 +91,17 @@ const AppProvider = ({children}) => {
     }
     clearAlert()
   }
+  const toggleSidebar = () => {
+    dispatch({type: TOGGLE_SIDEBAR})
+  }
+
+  const logoutUser = () => {
+    dispatch({type: LOGOUT_USER})
+    removeUserFromLocalStorage()
+  }
+
   return(
-    <AppContext.Provider value={{...state, displayAlert, registerUser, loginUser}}>
+    <AppContext.Provider value={{...state, displayAlert, registerUser, loginUser, toggleSidebar, logoutUser}}>
       {children}
     </AppContext.Provider>
   )
