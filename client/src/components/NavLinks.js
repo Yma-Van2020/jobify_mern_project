@@ -1,0 +1,24 @@
+import links from '../utils/links'
+import { NavLink } from 'react-router-dom'
+
+//padding toggleSidebar as a prop
+const NavLinks = ({toggleSidebar}) => {
+  return (
+          <div className="nav-links">
+            {links.map((link) => {
+              const { path, id, text, icon } = link;
+
+              return(
+              <NavLink to={path} key={id} onClick={toggleSidebar} className={({isActive}) => 
+                isActive? 'nav-link active' : 'nav-link'
+              }
+              >
+                <span className="icon">{icon}</span>
+                {text}
+              </NavLink>
+              )
+            })}
+          </div>
+  )
+}
+export default NavLinks
