@@ -1,6 +1,8 @@
 import express from 'express';
 import NotFoundMiddleware from './middleware/not-found.js';
 import errorHandlerMiddleware from './middleware/error-handler.js';
+import authenticateUser from './middleware/auth.js'
+
 import dotenv from 'dotenv';
 import connectDB from './db/connect.js';
 import 'express-async-errors'
@@ -26,7 +28,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/v1/auth', authRouter)
-app.use('/api/v1/jobs', jobsRouter)
+//all the routes should be authenticated
+app.use('/api/v1/jobs', authenticateUser, jobsRouter)
 
 app.use(NotFoundMiddleware)
 app.use(errorHandlerMiddleware)
