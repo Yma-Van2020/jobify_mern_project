@@ -26,6 +26,31 @@ const AppProvider = ({children}) => {
   //The state values are then passed down to the context using the value prop.
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const authFetch = axios.create({
+    baseURL: '/api/v1'
+  })
+
+  authFetch.interceptors.request.use((config) => {
+    config.headers['Authorization'] = `Bearer ${state.token}`
+      return config
+    },
+    (error) => {
+      return Promise.reject(error)
+    }
+  )
+
+  authFetch.interceptors.response.use(
+    (response) => {
+      return response
+    },
+    (error) => {
+      if(error.response.status == 401){
+        console.log('auth error')
+      }
+      return Promise.reject(error)
+    }
+  )
+
   //dispatch the action to update global state
   const displayAlert = () => {
     dispatch({type: DISPLAY_ALERT})
@@ -102,12 +127,7 @@ const AppProvider = ({children}) => {
 
   const updateUser = async(currentUser) => {
     try {
-      const {data} = await axios.patch('/api/v1/auth/updateUser', currentUser, {
-        headers: {
-          Authorization: `Bearer ${state.token}`
-        }
-      })
-      console.log(data)
+      const {data} = await authFetch.patch('/auth/updateUser', currentUser)
     }
     catch(error){
       console.log(error)
