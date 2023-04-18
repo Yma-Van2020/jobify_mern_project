@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from 'react';
 import reducer from './reducer'
-import { DISPLAY_ALERT, CLEAR_ALERT, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER } from './actions';
+import { DISPLAY_ALERT, CLEAR_ALERT, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR } from './actions';
 import axios from 'axios'
 
 const token = localStorage.getItem('token')
@@ -69,7 +69,7 @@ const AppProvider = ({children}) => {
     localStorage.setItem('location', location)
   }
 
-  const removeUserFromLocalStorage = ({user, token, location}) => {
+  const removeUserFromLocalStorage = () => {
     localStorage.removeItem('user')
     localStorage.removeItem('token')
     localStorage.removeItem('location')
@@ -126,12 +126,18 @@ const AppProvider = ({children}) => {
   }
 
   const updateUser = async(currentUser) => {
+    dispatch({type: UPDATE_USER_BEGIN})
     try {
       const {data} = await authFetch.patch('/auth/updateUser', currentUser)
+
+      const {user, location, token} = data
+      dispatch({type: UPDATE_USER_SUCCESS, payload: {user, location, token}})
+      addUserToLocalStorage({user, location, token})
     }
     catch(error){
-      console.log(error)
+      dispatch({type: UPDATE_USER_ERROR, payload: {msg: error.response.data.msg}})
     }
+    clearAlert()
   }
 
   return(
