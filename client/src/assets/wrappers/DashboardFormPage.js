@@ -24,6 +24,11 @@ const Wrapper = styled.section`
     display: grid;
     row-gap: 0.5rem;
   }
+  button {
+    width: 200px !important;
+    margin-left: 35px;
+    margin-right: 35px;
+  }
   .form-center button {
     align-self: end;
     height: 35px;
@@ -38,6 +43,11 @@ const Wrapper = styled.section`
     button {
       height: 35px;
     }
+  }
+  .flex-box{
+    display:flex;
+    justify-content: center;
+    margin-top: 58px !important;
   }
   .clear-btn {
     background: var(--grey-500);

@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from 'react';
 import reducer from './reducer'
-import { DISPLAY_ALERT, CLEAR_ALERT, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR } from './actions';
+import { DISPLAY_ALERT, CLEAR_ALERT, HANDLE_CHANGE, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR } from './actions';
 import axios from 'axios'
 
 const token = localStorage.getItem('token')
@@ -87,7 +87,7 @@ const AppProvider = ({children}) => {
   const registerUser = async (currentUser) => {
     dispatch({type: REGISTER_USER_BEGIN})
     try{
-      const response = await axios.post('/api/v1/auth/register', currentUser)
+      const response = await authFetch.post('/auth/register', currentUser)
       const { user, token, location } = response.data
       dispatch({ 
         type: REGISTER_USER_SUCCESS,
@@ -108,7 +108,7 @@ const AppProvider = ({children}) => {
   const loginUser = async(currentUser) => {
     dispatch({type: LOGIN_USER_BEGIN})
     try{
-      const response = await axios.post('/api/v1/auth/login', currentUser)
+      const response = await authFetch.post('/auth/login', currentUser)
       const { user, token, location } = response.data
       dispatch({ 
         type: LOGIN_USER_SUCCESS,
@@ -151,8 +151,39 @@ const AppProvider = ({children}) => {
     clearAlert()
   }
 
+  const handleChange = ({name, value}) => {
+    dispatch({type: HANDLE_CHANGE, payload: {name, value}})
+  }
+  
+  const clearValues = () => {
+    dispatch({type: CLEAR_VALUES})
+  }
+
+  const createJob = async () => {
+    dispatch({type: CREATE_JOB_BEGIN})
+    try{
+      const {position, company, jobLocation, jobType, status} = state
+      await authFetch.post('/jobs', {
+        position,
+        company,
+        jobLocation,
+        jobType,
+        status
+      })
+      dispatch({type: CREATE_JOB_SUCCESS})
+      dispatch({type: CLEAR_VALUES})
+    } catch(error){
+      if(error.response.status === 401) return
+      dispatch({
+        type: CREATE_JOB_ERROR,
+        payload: {msg: error.response.data.msg}
+      })
+    }
+    clearAlert()
+  }
+
   return(
-    <AppContext.Provider value={{...state, displayAlert, registerUser, loginUser, toggleSidebar, logoutUser, updateUser}}>
+    <AppContext.Provider value={{...state, displayAlert, registerUser, loginUser, toggleSidebar, logoutUser, clearValues, updateUser, handleChange, clearValues, createJob}}>
       {children}
     </AppContext.Provider>
   )
