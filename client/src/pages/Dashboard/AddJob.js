@@ -3,7 +3,7 @@ import { useAppContext, userAppContext } from '../../context/appContext.js'
 import Wrapper from '../../assets/wrappers/DashboardFormPage.js'
 
 const AddJob = () => {
-  const { showAlert, displayAlert, position, company, jobLocation, jobType, jobTypeOptions, status, statusOptions, isEditing, handleChange, clearValues, isLoading, createJob } = useAppContext()
+  const { showAlert, displayAlert, position, company, jobLocation, jobType, jobTypeOptions, status, statusOptions, isEditing, handleChange, clearValues, isLoading, createJob, editJob } = useAppContext()
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -12,6 +12,7 @@ const AddJob = () => {
     //   return 
     // }
     if(isEditing){
+      editJob()
       return
     }
     createJob()
