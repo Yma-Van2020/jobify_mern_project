@@ -21,20 +21,20 @@ const getAllJobs = async (req, res) => {
     .json({ jobs, totalJobs: jobs.length, numOfPages: 1}) //hard code for now, come back later
 }
 const deleteJob = async (req, res) => {
-  const { id: jobId } = req.params
+  const { id: jobId } = req.params;
 
-  const job = await Job.findOne({ _id: jobId })
+  const job = await Job.findOne({ _id: jobId });
 
   if (!job) {
-    throw new NotFoundError(`No job with id: ${jobId}`)
+    throw new NotFoundError(`No job with id :${jobId}`);
   }
 
-  // check permissions
-  checkPermissions(req.user, job.createdBy)
+  checkPermissions(req.user, job.createdBy);
 
-  await job.remove() // Fix: Call remove function on the job object
-  res.status(StatusCodes.OK).json({ msg: 'successfully removed job' })
-}
+  await Job.deleteOne({ _id: jobId }); // Use `Job.deleteOne` instead of `job.remove()` to delete the job from the database
+
+  res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' });
+};
 
 const updateJob = async (req, res) => {
   const {id:jobId} = req.params
