@@ -244,8 +244,26 @@ const AppProvider = ({children}) => {
     }
   }
 
+  const showStats = async () => {
+    dispatch({type: SHOW_STATS_BEGIN})
+    try{
+      const { data } = await authFetch('/jobs/stats')
+      dispatch({
+        type: SHOW_STATS_SUCCESS,
+        payload: {
+          stats: data.defaultStats,
+          monthlyApplications: data.monthlyApplications
+        }
+      })
+    } catch(error){
+      console.log(error.response)
+      //logoutUser()
+    }
+    clearAlert()
+  }
+
   return(
-    <AppContext.Provider value={{...state, displayAlert, registerUser, loginUser, toggleSidebar, logoutUser, clearValues, updateUser, handleChange, clearValues, createJob, getJobs, setEditJob, deleteJob, editJob}}>
+    <AppContext.Provider value={{...state, displayAlert, registerUser, loginUser, toggleSidebar, logoutUser, clearValues, updateUser, handleChange, clearValues, createJob, getJobs, setEditJob, deleteJob, editJob, showStats}}>
       {children}
     </AppContext.Provider>
   )
