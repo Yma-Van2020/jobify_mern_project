@@ -24,10 +24,10 @@ const getAllJobs = async (req, res) => {
   }
 
   //add stuff based on condition
-  if(status !== 'all'){
+  if(status && status !== 'all'){
     queryObject.status = status
   }
-  if(jobType !== 'all'){
+  if(jobType && jobType !== 'all'){
     queryObject.jobType = jobType
   }
   if(search){
@@ -49,12 +49,21 @@ const getAllJobs = async (req, res) => {
     result = result.sort('-position')
   }
 
+  const page = Number(req.query.page) || 1
+  const limit = Number(req.query.limit) || 10
+  const skip = (page - 1) * limit
+
+  result = result.skip(skip).limit(limit)
+
   //chain sort conditions
   const jobs = await result
 
+  const totalJobs = await Job.countDocuments(queryObject)
+  const numOfPages = math.ceil(totalJobs/limit)
+
   res
     .status(StatusCodes.OK)
-    .json({ jobs, totalJobs: jobs.length, numOfPages: 1}) //hard code for now, come back later
+    .json({ jobs, totalJobs, numOfPages}) 
 }
 const deleteJob = async (req, res) => {
   const { id: jobId } = req.params;
