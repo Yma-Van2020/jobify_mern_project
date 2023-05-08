@@ -9,6 +9,10 @@ import 'express-async-errors'
 import authRouter from './routes/authRoutes.js'
 import jobsRouter from './routes/jobsRoutes.js'
 import morgan from 'morgan'
+
+import helmet from 'helmet'
+import xss from 'xss-clean'
+import mongoSanitize from 'express-mongo-sanitize'
 // import cors from 'cors'
 
 // app.use(cors())
@@ -22,6 +26,9 @@ if(process.env.NODE_ENV !== 'production'){
 
 //get the json data
 app.use(express.json())
+app.use(helmet())
+app.use(xss())
+app.use(mongoSanitize())
 
 app.get('/', (req, res) => {
   res.send("welcome")
