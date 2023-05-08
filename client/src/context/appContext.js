@@ -1,6 +1,6 @@
 import React, { useReducer, useContext, useEffect } from 'react';
 import reducer from './reducer'
-import { DISPLAY_ALERT, CLEAR_ALERT, HANDLE_CHANGE, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, CLEAR_FILTERS } from './actions';
+import { DISPLAY_ALERT, CLEAR_ALERT, HANDLE_CHANGE, REGISTER_USER_BEGIN, REGISTER_USER_SUCCESS, REGISTER_USER_ERROR, LOGIN_USER_BEGIN, LOGIN_USER_SUCCESS, LOGIN_USER_ERROR, TOGGLE_SIDEBAR, LOGOUT_USER, UPDATE_USER_BEGIN, UPDATE_USER_SUCCESS, UPDATE_USER_ERROR, CLEAR_VALUES, CREATE_JOB_BEGIN, CREATE_JOB_SUCCESS, CREATE_JOB_ERROR, GET_JOBS_BEGIN, GET_JOBS_SUCCESS, SET_EDIT_JOB, DELETE_JOB_BEGIN, EDIT_JOB_BEGIN, EDIT_JOB_SUCCESS, EDIT_JOB_ERROR, SHOW_STATS_BEGIN, SHOW_STATS_SUCCESS, CLEAR_FILTERS, CHANGE_PAGE } from './actions';
 import axios from 'axios'
 
 const token = localStorage.getItem('token')
@@ -195,9 +195,9 @@ const AppProvider = ({children}) => {
     clearAlert()
   }
   const getJobs = async() => {
-    const { search, searchStatus, searchType, sort } = state
+    const { page, search, searchStatus, searchType, sort } = state
     
-    let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`
+    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`
     if(search){
       url = url + `&search=${search}`
     }
@@ -251,7 +251,7 @@ const AppProvider = ({children}) => {
       await authFetch.delete(`/jobs/${jobId}`)
       getJobs()
     } catch(error){
-      console.log(error.response)
+      logoutUser()
     }
   }
 
@@ -267,8 +267,8 @@ const AppProvider = ({children}) => {
         }
       })
     } catch(error){
-      console.log(error.response)
-      //logoutUser()
+      // console.log(error.response)
+      logoutUser()
     }
     clearAlert()
   }
@@ -276,8 +276,13 @@ const AppProvider = ({children}) => {
     dispatch({type: CLEAR_FILTERS})
   }
 
+  const changePage = (page) => {
+    dispatch({type: CHANGE_PAGE, payload: { page }})
+  }
+
+
   return(
-    <AppContext.Provider value={{...state, displayAlert, registerUser, loginUser, toggleSidebar, logoutUser, clearValues, updateUser, handleChange, clearValues, createJob, getJobs, setEditJob, deleteJob, editJob, showStats, clearFilters}}>
+    <AppContext.Provider value={{...state, displayAlert, registerUser, loginUser, toggleSidebar, logoutUser, clearValues, updateUser, handleChange, clearValues, createJob, getJobs, setEditJob, deleteJob, editJob, showStats, clearFilters, changePage}}>
       {children}
     </AppContext.Provider>
   )
