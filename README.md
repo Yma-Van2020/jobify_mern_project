@@ -30,13 +30,7 @@ This guide will help you run the full-stack MERN application that allows users t
 
 ## Setup React App
 
-1. **Create Client Folder**
-
-   ```bash
-   mkdir client
-   ```
-
-2. **Open Terminal and Navigate to Client Folder**
+1. **Open Terminal and Navigate to Client Folder**
 
    ```bash
    cd client
